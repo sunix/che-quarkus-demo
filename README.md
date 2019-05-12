@@ -152,4 +152,53 @@ Last change: share the .m2 repo for the volume to both builder and the java plug
         containerPath: /root/.m2
 ```
 
-That's it
+Creating a workspace from that devfile, you should be able to get commands from the `My workspace` view and start the quarkus dev mode. Changing the quarkusdemoresource.
+accessing to the application. Openning `QaurkusDemoResource.java` should openned the editor with the fully functional editor and java intellisence.
+
+## Packaging ...
+
+Let's continue improving our devfile, we want to be able to package the app and run the native build.
+
+I have renamed the component `quay-io-quarkus-cent` to `quarkus-dev`. Also renamed the command to `mvn compile quarkus:dev`
+```yaml
+  - alias: quarkus-dev
+    type: dockerimage
+    image: quay.io/quarkus/centos-quarkus-maven
+    memoryLimit: 1Gi
+    mountSources: true
+    args: ['-f', '/dev/null']
+    volumes:
+      - name: mavenrepo
+        containerPath: /root/.m2
+```
+and ...
+```yaml
+commands:
+  -
+    name: mvn compile quarkus:dev
+    actions:
+      - type: exec
+        command: ./restart_mvn_quarkus_dev.sh
+        component: quarkus-dev
+        workdir: /projects/che-quarkus-demo
+
+```
+
+Let's add a new command to perform `mvn package` and `mvn package -Pnative` (for native compilation optimized with GraalVM):
+```yaml
+commands:
+  -
+    name: mvn package
+    actions:
+      - type: exec
+        command: mvn package
+        component: quarkus-dev
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+  -
+    name: mvn package -Pnative
+    actions:
+      - type: exec
+        command: mvn package -Pnative
+        component: quarkus-dev
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+```
