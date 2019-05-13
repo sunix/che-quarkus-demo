@@ -267,3 +267,32 @@ commands:
         component: quarkus-builder
         workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
 ```
+
+## Run the native build in an appropriate runner
+
+Let's add to our devfile a subatomic container where we are going to run our freshly built subatomic Java app
+
+```yaml
+  -
+    alias: quarkus-runner
+    type: dockerimage
+    image: registry.fedoraproject.org/fedora-minimal
+    memoryLimit: 128M
+    mountSources: true
+    command: ['tail']
+    args: ['-f', '/dev/null']
+  -
+```
+
+and create the appropriate command
+
+```yaml
+  -
+    name: run native
+    actions:
+      - type: exec
+        command: ./sunix-quarkus-demo-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
+        component: quarkus-runner
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo/target
+```
+![Quarkus runner che workspace screenshot](screenshot-workspace-quarkus-runner.png "Quarkus runner che workspace screenshot")
