@@ -113,7 +113,7 @@ Let's give more memory to the java language server:
   - type: chePlugin
     alias: java-ls
     id: redhat/java/0.43.0
-    memoryLimit: 2Gi
+    memoryLimit: 1536M
 ```
 
 And add a git dockerImage because it is so conveniant to do `git add -p` :) and use `tig`
@@ -159,12 +159,12 @@ accessing to the application. Openning `QaurkusDemoResource.java` should openned
 
 Let's continue improving our devfile, we want to be able to package the app and run the native build.
 
-I have renamed the component `quay-io-quarkus-cent` to `quarkus-dev`. Also renamed the command to `mvn compile quarkus:dev`
+I have renamed the component `quay-io-quarkus-cent` to `quarkus-builder`, gave it a bit more memory (native compilation needs more). Also renamed the command to `compile quarkus:dev`
 ```yaml
-  - alias: quarkus-dev
+  - alias: quarkus-builder
     type: dockerimage
     image: quay.io/quarkus/centos-quarkus-maven
-    memoryLimit: 1Gi
+    memoryLimit: 2Gi
     mountSources: true
     args: ['-f', '/dev/null']
     volumes:
@@ -175,11 +175,11 @@ and ...
 ```yaml
 commands:
   -
-    name: mvn compile quarkus:dev
+    name: compile quarkus:dev
     actions:
       - type: exec
         command: ./restart_mvn_quarkus_dev.sh
-        component: quarkus-dev
+        component: quarkus-builder
         workdir: /projects/che-quarkus-demo
 
 ```
@@ -188,17 +188,82 @@ Let's add a new command to perform `mvn package` and `mvn package -Pnative` (for
 ```yaml
 commands:
   -
-    name: mvn package
+    name: package
     actions:
       - type: exec
         command: mvn package
-        component: quarkus-dev
+        component: quarkus-builder
         workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
   -
-    name: mvn package -Pnative
+    name: package -Pnative
     actions:
       - type: exec
         command: mvn package -Pnative
-        component: quarkus-dev
+        component: quarkus-builder
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+```
+
+Relaunching a new workspace from it, we should be able to to run the native Quarkus compilation and produce the executable. Basically followed https://quarkus.io/guides/building-native-image-guide.
+
+To recap, my devfile looks like:
+
+```yaml
+specVersion: 0.0.1
+name: quarkus-che-demo
+projects:
+  - source:
+      type: git
+      location: 'https://github.com/sunix/che-quarkus-demo'
+    name: che-quarkus-demo
+components:
+  -
+    alias: quarkus-builder
+    type: dockerimage
+    image: quay.io/quarkus/centos-quarkus-maven
+    memoryLimit: 2Gi
+    mountSources: true
+    command: ['tail']
+    args: ['-f', '/dev/null']
+    volumes:
+      - name: mavenrepo
+        containerPath: /root/.m2
+  -
+    type: chePlugin
+    alias: java-ls
+    id: redhat/java/0.43.0
+    memoryLimit: 1536M
+  -
+    alias: git-devtools
+    type: dockerimage
+    image: sunix/git-devtools
+    mountSources: true
+    memoryLimit: 256M
+    command: ['tail']
+    args: ['-f', '/dev/null']
+  -
+    type: cheEditor
+    alias: theia-editor
+    id: eclipse/che-theia/next
+commands:
+  -
+    name: compile quarkus:dev
+    actions:
+      - type: exec
+        command: ./restart_mvn_quarkus_dev.sh
+        component: quarkus-builder
+        workdir: /projects/che-quarkus-demo
+  -
+    name: package
+    actions:
+      - type: exec
+        command: mvn package
+        component: quarkus-builder
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+  -
+    name: package -Pnative
+    actions:
+      - type: exec
+        command: mvn package -Pnative
+        component: quarkus-builder
         workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
 ```
