@@ -3,7 +3,7 @@
 ## how to generate this:
 Generate a empty devfile to run quarkus build
 ```
-chectl devfile:generate --name=quarkus-che-demo --language=java --editor=theia-next --dockerImage=quay.io/quarkus/centos-quarkus-maven > quarkus.dev
+chectl devfile:generate --name=quarkus-che-demo --language=java --editor=theia-next --dockerimage=quay.io/quarkus/centos-quarkus-maven > quarkus.dev
 file
 ```
 
@@ -31,20 +31,6 @@ mvn compile quarkus:dev
 ```
 It will compile the project and start quarkus:dev
 
-Create a script `/projects/che-quarkus-demo/restart_mvn_quarkus_dev.sh` to restart quarkus. It will be used in one of our command:
-
-```bash
-#!/bin/bash
-cd sunix-quarkus-demo
-ps aux | grep 'java' | awk '{print $2}' | xargs kill -9;
-mvn compile quarkus:dev
-```
-
-change permission of that file:
-```bash
-chmod +x /projects/che-quarkus-demo/restart_mvn_quarkus_dev.sh
-```
-
 Back to the theia-ide container terminal to push everything
 ```
 cd /projects/sunix-demo-quarkus
@@ -67,13 +53,15 @@ chectl devfile:generate \
     --name=quarkus-che-demo \
     --language=java \
     --editor=theia-next \
-    --dockerImage=quay.io/quarkus/centos-quarkus-maven \
+    --dockerimage=quay.io/quarkus/centos-quarkus-maven \
     --git-repo=https://github.com/sunix/che-quarkus-demo \
-    --command="./restart_mvn_quarkus_dev.sh" \
+    --command="mvn compile quarkus:dev" \
  > quarkus.devfile
 
 ```
+
 generates that:
+
 ```yaml
 specVersion: 0.0.1
 name: quarkus-che-demo
@@ -100,12 +88,13 @@ components:
     alias: theia-editor
     id: eclipse/che-theia/next
 commands:
-  - name: ./restart_mvn_quarkus_dev.sh
+  - name: 'mvn compile quarkus:dev'
     actions:
       - type: exec
-        command: ./restart_mvn_quarkus_dev.sh
+        command: 'mvn compile quarkus:dev'
         component: quay-io-quarkus-cent
         workdir: /projects/che-quarkus-demo
+
 ```
 
 Let's give more memory to the java language server:
@@ -116,7 +105,7 @@ Let's give more memory to the java language server:
     memoryLimit: 1536M
 ```
 
-And add a git dockerImage because it is so conveniant to do `git add -p` :) and use `tig`
+And add a git dockerimage because it is so conveniant to do `git add -p` :) and use `tig`
 ```yaml
   -
     alias: git-devtools
@@ -171,31 +160,35 @@ I have renamed the component `quay-io-quarkus-cent` to `quarkus-builder`, gave i
       - name: mavenrepo
         containerPath: /root/.m2
 ```
-and ...
+and component reference in the command. I have also change the folder where the command is going to be executed:
 ```yaml
 commands:
-  -
-    name: compile quarkus:dev
+  - name: compile quarkus:dev
     actions:
       - type: exec
-        command: ./restart_mvn_quarkus_dev.sh
+        command: pkill java; mvn compile quarkus:dev
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo
-
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
 ```
 
-Let's add a new command to perform `mvn package` and `mvn package -Pnative` (for native compilation optimized with GraalVM):
+Let's add a new command to perform `mvn package` and `mvn package -Pnative` (for native compilation optimized with GraalVM) and the command to kill the quarkus devmode:
+
 ```yaml
 commands:
-  -
-    name: package
+  - name: pkill java
+    actions:
+      - type: exec
+        command: pkill java
+        component: quarkus-builder
+
+  - name: package
     actions:
       - type: exec
         command: mvn package
         component: quarkus-builder
         workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
-  -
-    name: package -Pnative
+
+  - name: package -Pnative
     actions:
       - type: exec
         command: mvn package -Pnative
@@ -210,14 +203,17 @@ To recap, my devfile looks like:
 ```yaml
 specVersion: 0.0.1
 name: quarkus-che-demo
+
 projects:
+
   - source:
       type: git
       location: 'https://github.com/sunix/che-quarkus-demo'
     name: che-quarkus-demo
+
 components:
-  -
-    alias: quarkus-builder
+
+  - alias: quarkus-builder
     type: dockerimage
     image: quay.io/quarkus/centos-quarkus-maven
     memoryLimit: 2Gi
@@ -227,45 +223,60 @@ components:
     volumes:
       - name: mavenrepo
         containerPath: /root/.m2
-  -
-    type: chePlugin
+
+  - alias: quarkus-runner
+    type: dockerimage
+    image: registry.fedoraproject.org/fedora-minimal
+    memoryLimit: 56M
+    mountSources: true
+    command: ['tail']
+    args: ['-f', '/dev/null']
+
+  - type: chePlugin
     alias: java-ls
     id: redhat/java/0.43.0
     memoryLimit: 1536M
-  -
-    alias: git-devtools
+
+  - alias: git-devtools
     type: dockerimage
     image: sunix/git-devtools
     mountSources: true
     memoryLimit: 256M
     command: ['tail']
     args: ['-f', '/dev/null']
-  -
-    type: cheEditor
+
+  - type: cheEditor
     alias: theia-editor
     id: eclipse/che-theia/next
+
 commands:
-  -
-    name: compile quarkus:dev
+  - name: compile quarkus:dev
     actions:
       - type: exec
-        command: ./restart_mvn_quarkus_dev.sh
+        command: pkill java; mvn compile quarkus:dev
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo
-  -
-    name: package
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+
+  - name: pkill java
+    actions:
+      - type: exec
+        command: pkill java
+        component: quarkus-builder
+
+  - name: package
     actions:
       - type: exec
         command: mvn package
         component: quarkus-builder
         workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
-  -
-    name: package -Pnative
+
+  - name: package -Pnative
     actions:
       - type: exec
         command: mvn package -Pnative
         component: quarkus-builder
         workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+
 ```
 
 ## Run the native build in an appropriate runner
