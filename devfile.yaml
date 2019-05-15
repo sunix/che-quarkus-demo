@@ -1,0 +1,82 @@
+specVersion: 0.0.1
+name: quarkus-che-demo
+
+projects:
+
+  - source:
+      type: git
+      location: 'https://github.com/sunix/che-quarkus-demo'
+    name: che-quarkus-demo
+
+components:
+
+  - alias: quarkus-builder
+    type: dockerimage
+    image: quay.io/quarkus/centos-quarkus-maven
+    memoryLimit: 2Gi
+    mountSources: true
+    command: ['tail']
+    args: ['-f', '/dev/null']
+    volumes:
+      - name: mavenrepo
+        containerPath: /root/.m2
+
+  - alias: quarkus-runner
+    type: dockerimage
+    image: registry.fedoraproject.org/fedora-minimal
+    memoryLimit: 56M
+    mountSources: true
+    command: ['tail']
+    args: ['-f', '/dev/null']
+
+  - type: chePlugin
+    alias: java-ls
+    id: redhat/java/0.43.0
+    memoryLimit: 1536M
+
+  - alias: git-devtools
+    type: dockerimage
+    image: sunix/git-devtools
+    mountSources: true
+    memoryLimit: 256M
+    command: ['tail']
+    args: ['-f', '/dev/null']
+
+  - type: cheEditor
+    alias: theia-editor
+    id: eclipse/che-theia/next
+commands:
+  - name: compile quarkus:dev
+    actions:
+      - type: exec
+        command: pkill java; mvn compile quarkus:dev
+        component: quarkus-builder
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+
+  - name: pkill java
+    actions:
+      - type: exec
+        command: pkill java
+        component: quarkus-builder
+
+  - name: package
+    actions:
+      - type: exec
+        command: mvn package
+        component: quarkus-builder
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+
+  - name: package -Pnative
+    actions:
+      - type: exec
+        command: mvn package -Pnative
+        component: quarkus-builder
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+
+  - name: run native
+    actions:
+      - type: exec
+        command: ./sunix-quarkus-demo-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
+        component: quarkus-runner
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo/target
+
