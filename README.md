@@ -81,7 +81,7 @@ You can talk about the fact that this environment is very close to the productio
 Latest slide deck: https://docs.google.com/presentation/d/12DvTtEUT96t91t52MnFCs4Ar0XDj9XlpS8uM73n8C6Y/edit?usp=sharing
 
 
-# How I set this demo up
+# How did I created this demo up
 In this section I will describe the way I have created this demo.
 
 ## how to generate this:
