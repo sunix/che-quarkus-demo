@@ -23,7 +23,7 @@ components:
 
   - alias: quarkus-runner
     type: dockerimage
-    image: registry.fedoraproject.org/fedora-minimal
+    image: registry.fedoraproject.org/fedora-minimal:29
     memoryLimit: 16M
     mountSources: true
     command: ['tail']
