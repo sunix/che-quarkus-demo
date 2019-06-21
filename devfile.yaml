@@ -40,11 +40,11 @@ components:
 
   - alias: java
     type: chePlugin
-    id: redhat/java/0.43.0
+    id: redhat/java/latest
     memoryLimit: 1536M
 
   - alias: yaml
-    id: redhat/vscode-yaml/0.4.0
+    id: redhat/vscode-yaml/latest
     type: chePlugin
 
   - type: cheEditor
