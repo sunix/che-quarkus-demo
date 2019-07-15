@@ -11,7 +11,7 @@
 ###
 # Builder Image
 #
-FROM quay.io/quarkus/centos-quarkus-maven as builder
+FROM quay.io/quarkus/centos-quarkus-maven:19.0.2 as builder
 
 COPY sunix-quarkus-demo /projects/sunix-quarkus-demo
 WORKDIR /projects/sunix-quarkus-demo
