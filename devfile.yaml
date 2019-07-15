@@ -13,7 +13,7 @@ components:
 
   - alias: quarkus-builder
     type: dockerimage
-    image: quay.io/quarkus/centos-quarkus-maven:19.0.2
+    image: quay.io/quarkus/centos-quarkus-maven:graalvm-1.0.0-rc16
     memoryLimit: 2Gi
     mountSources: true
     command: ['tail']
