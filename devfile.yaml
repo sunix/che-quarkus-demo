@@ -15,8 +15,9 @@ components:
     type: dockerimage
     image: quay.io/quarkus/centos-quarkus-maven:graalvm-1.0.0-rc16
     memoryLimit: 2Gi
+    command: ['tail']
+    args: ['-f', '/dev/null']
     mountSources: true
-    args: ['sleep', 'infinity']
     volumes:
       - name: mavenrepo
         containerPath: /root/.m2
@@ -26,7 +27,8 @@ components:
     image: registry.fedoraproject.org/fedora-minimal:29
     memoryLimit: 16M
     mountSources: true
-    args: ['sleep', 'infinity']
+    command: ['tail']
+    args: ['-f', '/dev/null']
 
   - alias: git
     type: dockerimage
