@@ -20,7 +20,7 @@ components:
     mountSources: true
     volumes:
       - name: mavenrepo
-        containerPath: /root/.m2
+        containerPath: /project/.m2
 
   - alias: quarkus-runner
     type: dockerimage
