@@ -15,8 +15,7 @@ components:
     type: dockerimage
     image: quay.io/quarkus/centos-quarkus-maven:graalvm-1.0.0-rc16
     memoryLimit: 2Gi
-    command: ['tail']
-    args: ['-f', '/dev/null']
+    args: ['sleep', 'infinity']
     mountSources: true
     volumes:
       - name: mavenrepo
