@@ -20,7 +20,9 @@ components:
     volumes:
       - name: mavenrepo
         containerPath: /project/.m2
-
+    env:
+      - name: HOME
+        value: /project
   - alias: quarkus-runner
     type: dockerimage
     image: registry.fedoraproject.org/fedora-minimal:29
