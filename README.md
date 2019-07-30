@@ -58,11 +58,11 @@ The devfile will also setup few container images:
     1. Start the quarkus app in devmode. With the right command `compile quarkus:dev`.
     2. Running it should popup windows to access to the exposed port of the app.
     3. Open the link into another tab and access to the `/hello`. It should display `hello`.
-    4. Make a change on the Java file `sunix-quarkus-demo/src/main/java/org/sunix/QuarkusDemoResource.java`,
+    4. Make a change on the Java file `hello-quarkus/src/main/java/com/example/QuarkusDemoResource.java`,
        use the code completion to perform a `"hello".toUpperCase();`. BEWARE, autosave may not be activated by default (File > Auto Save)
-    5. Don't forget to update the test `sunix-quarkus-demo/src/test/java/org/sunix/QuarkusDemoResourceTest.java`
+    5. Don't forget to update the test `hello-quarkus/src/test/java/com/example/QuarkusDemoResourceTest.java`
     6. Refreshing the app tab page, it should display `HELLO`
-    7. Stop it : `pkill java`
+    7. Stop it : Ctrl-C
     8. Package the app into a classic java app (optional)
     9. Package the app into a tiny executable by running the native compilation `package -Pnative`, it will take a while ....
 - `quarkus-runner`: which is based on `registry.fedoraproject.org/fedora-minimal`
@@ -100,13 +100,13 @@ That will run a che workspace with quarkus and maven ... let's generate the proj
 
 From the theia-ide container terminal ...
 ```
-cd /projects && git init sunix-demo-quarkus
+cd /projects && git init che-quarkus-demo
 ```
 
 From the quay-io-quarkus-cent terminal ....
 ```
-cd /projects/sunix-demo-quarkus
-mvn io.quarkus:quarkus-maven-plugin:0.14.0:create -DprojectGroupId=org.sunix -DprojectArtifactId=sunix-quarkus-demo -DclassName="org.sunix.QuarkusDemoResource" -Dpath="/hello"
+cd /projects/che-quarkus-demo
+mvn io.quarkus:quarkus-maven-plugin:0.14.0:create -DprojectGroupId=com.example -DprojectArtifactId=hello-quarkus -DclassName="com.example.QuarkusDemoResource" -Dpath="/hello"
 ```
 
 You can try to run from the terminal
@@ -117,10 +117,10 @@ It will compile the project and start quarkus:dev
 
 Back to the theia-ide container terminal to push everything
 ```
-cd /projects/sunix-demo-quarkus
+cd /projects/che-quarkus-demo
 git remote add sunix https://github.com/sunix/che-quarkus-demo
 git checkout master
-git add sunix-quarkus-demo/
+git add hello-quarkus/
 git add restart_mvn_quarkus_dev.sh
 git commit -s -m "quarkus java project skeleton"
 git push sunix master
@@ -252,7 +252,7 @@ commands:
       - type: exec
         command: pkill java; mvn compile quarkus:dev
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+        workdir: /projects/che-quarkus-demo/hello-quarkus
 ```
 
 Let's add a new command to perform `mvn package` and `mvn package -Pnative` (for native compilation optimized with GraalVM) and the command to kill the quarkus devmode:
@@ -270,14 +270,14 @@ commands:
       - type: exec
         command: mvn package
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+        workdir: /projects/che-quarkus-demo/hello-quarkus
 
   - name: package -Pnative
     actions:
       - type: exec
         command: mvn package -Pnative
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+        workdir: /projects/che-quarkus-demo/hello-quarkus
 ```
 
 Relaunching a new workspace from it, we should be able to to run the native Quarkus compilation and produce the executable. Basically followed https://quarkus.io/guides/building-native-image-guide.
@@ -339,7 +339,7 @@ commands:
       - type: exec
         command: pkill java; mvn compile quarkus:dev
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+        workdir: /projects/che-quarkus-demo/hello-quarkus
 
   - name: pkill java
     actions:
@@ -352,14 +352,14 @@ commands:
       - type: exec
         command: mvn package
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+        workdir: /projects/che-quarkus-demo/hello-quarkus
 
   - name: package -Pnative
     actions:
       - type: exec
         command: mvn package -Pnative
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+        workdir: /projects/che-quarkus-demo/hello-quarkus
 
 ```
 
@@ -386,8 +386,8 @@ and create the appropriate command
     name: run native
     actions:
       - type: exec
-        command: ./sunix-quarkus-demo-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
+        command: ./hello-quarkus-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
         component: quarkus-runner
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo/target
+        workdir: /projects/che-quarkus-demo/hello-quarkus/target
 ```
 ![Quarkus runner che workspace screenshot](screenshot-workspace-quarkus-runner.png "Quarkus runner che workspace screenshot")

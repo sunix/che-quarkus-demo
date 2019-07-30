@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>sunix-quarkus-demo - 1.0-SNAPSHOT</title>
+    <title>hello-quarkus - 1.0-SNAPSHOT</title>
     <style>
         h1, h2, h3, h4, h5, h6 {
             margin-bottom: 0.5rem;
@@ -111,8 +111,10 @@
 
         <p>This page is served by Quarkus. The source is in
             <code>src/main/resources/META-INF/resources/index.html</code>.</p>
+        <p><a href="/hello">/hello</a> endpoint:</p>
+        <iframe src="/hello" height="200" width="300"></iframe>
 
-        <h2>What can I do from here?</h2>
+        <h2>What can I do from here? </h2>
 
         <p>If not already done, run the application in <em>dev mode</em> using: <code>mvn compile quarkus:dev</code>.
         </p>
@@ -130,8 +132,8 @@
         <div class="right-section">
             <h3>Application</h3>
             <ul>
-                <li>GroupId: org.sunix</li>
-                <li>ArtifactId: sunix-quarkus-demo</li>
+                <li>GroupId: com.example</li>
+                <li>ArtifactId: hello-quarkus</li>
                 <li>Version: 1.0-SNAPSHOT</li>
                 <li>Quarkus Version: 0.14.0</li>
             </ul>
