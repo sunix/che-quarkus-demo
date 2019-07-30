@@ -58,40 +58,26 @@ commands:
       - type: exec
         command: pkill java; mvn compile quarkus:dev
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
-
-  - name: pkill java
-    actions:
-      - type: exec
-        command: pkill java
-        component: quarkus-builder
+        workdir: /projects/che-quarkus-demo/hello-quarkus
 
   - name: package
     actions:
       - type: exec
         command: mvn package
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+        workdir: /projects/che-quarkus-demo/hello-quarkus
 
   - name: package -Pnative
     actions:
       - type: exec
         command: mvn package -Pnative
         component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
+        workdir: /projects/che-quarkus-demo/hello-quarkus
 
   - name: start native
     actions:
       - type: exec
-        command: ./sunix-quarkus-demo-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0 & echo $!> /tmp/quarkus.pid ; wait `cat /tmp/quarkus.pid`
+        command: ./hello-quarkus-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
         component: quarkus-runner
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo/target
-
-  - name: stop native
-    actions:
-      - type: exec
-        command: >
-                 kill `cat /tmp/quarkus.pid`;
-        component: quarkus-runner
-        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo/target
+        workdir: /projects/che-quarkus-demo/hello-quarkus/target
 

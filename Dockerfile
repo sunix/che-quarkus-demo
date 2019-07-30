@@ -13,13 +13,13 @@
 #
 FROM quay.io/quarkus/centos-quarkus-maven:graalvm-1.0.0-rc16 as builder
 
-COPY sunix-quarkus-demo /projects/sunix-quarkus-demo
-WORKDIR /projects/sunix-quarkus-demo
+COPY hello-quarkus /projects/hello-quarkus
+WORKDIR /projects/hello-quarkus
 RUN mvn package -Pnative
 
 FROM registry.fedoraproject.org/fedora-minimal as runtime
 WORKDIR /work/
-COPY --from=builder /projects/sunix-quarkus-demo/target/sunix-quarkus-demo-1.0-SNAPSHOT-runner /work/application
+COPY --from=builder /projects/hello-quarkus/target/hello-quarkus-1.0-SNAPSHOT-runner /work/application
 RUN chmod 775 /work
 EXPOSE 8080
 CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]

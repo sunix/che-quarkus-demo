@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.sunix</groupId>
-  <artifactId>sunix-quarkus-demo</artifactId>
+  <artifactId>hello-quarkus</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
     <surefire-plugin.version>2.22.0</surefire-plugin.version>
