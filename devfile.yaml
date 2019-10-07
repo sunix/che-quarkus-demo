@@ -1,7 +1,6 @@
 apiVersion: 1.0.0
 metadata:
-  name: quarkus-che-demo
-
+  generateName: quarkus-che-demo-
 projects:
 
   - source:
@@ -46,10 +45,6 @@ components:
   - alias: yaml
     id: redhat/vscode-yaml/latest
     type: chePlugin
-
-  - type: cheEditor
-    alias: theia-editor
-    id: eclipse/che-theia/7.0.0-next
 
 commands:
 
