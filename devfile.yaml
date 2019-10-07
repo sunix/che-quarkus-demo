@@ -12,7 +12,8 @@ components:
 
   - alias: quarkus-builder
     type: dockerimage
-    image: quay.io/quarkus/centos-quarkus-maven:graalvm-1.0.0-rc16
+    #image: quay.io/quarkus/centos-quarkus-maven:graalvm-1.0.0-rc16
+    image: quay.io/quarkus/ubi-quarkus-native-binary-s2i:19.2.0
     memoryLimit: 2Gi
     args: ['sleep', 'infinity']
     mountSources: true
@@ -36,11 +37,6 @@ components:
     mountSources: true
     memoryLimit: 256M
     args: ['sleep', 'infinity']
-
-  - alias: java
-    type: chePlugin
-    id: redhat/java/latest
-    memoryLimit: 1536M
 
   - alias: yaml
     id: redhat/vscode-yaml/latest
