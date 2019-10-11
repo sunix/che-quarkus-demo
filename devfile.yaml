@@ -24,6 +24,11 @@ components:
     env:
       - name: HOME
         value: /project
+    endpoints:
+      - name: 'quarkus/dev'
+        port: 8080
+      - name: 'quarkus/dev-debug'
+        port: 5005
   - alias: quarkus-backend
     type: dockerimage
     image: quay.io/quarkus/ubi-quarkus-native-image:19.2.0.1
@@ -31,12 +36,15 @@ components:
     mountSources: true
     command: ['tail']
     args: ['-f', '/dev/null']
+    endpoints:
+      - name: '8080/tcp'
+        port: 8080
 
   - alias: node-frontend
     type: dockerimage
     image: docker.io/centos/nodejs-8-centos7:latest
     memoryLimit: 64Mi
-    mountSources: false
+    mountSources: true
     args: ['tail', '-f', '/dev/null']
     endpoints:
       - name: '3000/tcp'
@@ -70,21 +78,21 @@ commands:
   - name: package
     actions:
       - type: exec
-        command: mvn package
+        command: pkill java; mvn package
         component: quarkus-backend-builder
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
   - name: package -Pnative
     actions:
       - type: exec
-        command: mvn package -Pnative
+        command: pkill java; mvn package -Pnative
         component: quarkus-backend-builder
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
   - name: start quarkus-backend native
     actions:
       - type: exec
-        command: ./hello-quarkus-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
+        command: ./quarkus-demo-1.0.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
         component: quarkus-backend
         workdir: /projects/che-quarkus-demo/quarkus-backend/target
 
