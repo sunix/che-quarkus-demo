@@ -1,0 +1,33 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: che-quarkus-demo-frontend
+  labels:
+    app: che-quarkus-demo
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: che-quarkus-demo-frontend
+    labels:
+      app: che-quarkus-demo
+  spec:
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector: 
+      app: che-quarkus-demo-frontend
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: che-quarkus-demo-frontend
+    labels:
+      app: che-quarkus-demo    
+  spec:
+    to:
+      kind: Service
+      name: che-quarkus-demo-frontend
+    port:
+      targetPort: http

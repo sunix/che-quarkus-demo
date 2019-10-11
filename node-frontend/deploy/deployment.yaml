@@ -1,0 +1,62 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: che-quarkus-demo-frontend
+  labels:
+    app: che-quarkus-demo
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: che-quarkus-demo-frontend
+    labels:
+      app: che-quarkus-demo
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 2
+    selector:
+      app: che-quarkus-demo-frontend
+    template:
+      metadata:
+        labels:
+          app: che-quarkus-demo-frontend
+      spec:  
+        containers:
+        - env:
+          -  name: REACT_APP_BACKEND_HOST
+             value: ${BACKEND_API}
+          image: amisevsk/che-demo-frontend
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 50
+            failureThreshold: 3
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            failureThreshold: 5
+            timeoutSeconds: 5
+          name: che-quarkus-demo-frontend
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              memory: 128Mi
+        restartPolicy: Always
+    triggers:
+    - type: ConfigChange
+parameters:
+- name: BACKEND_API
+  displayName: backend API url
+  value: http://localhost:8080

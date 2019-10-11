@@ -6,13 +6,14 @@ projects:
   - source:
       type: git
       location: 'https://github.com/sunix/che-quarkus-demo'
+      branch: microservices
     name: che-quarkus-demo
 
 components:
 
-  - alias: quarkus-builder
+  - alias: quarkus-backend-builder
     type: dockerimage
-    image: quay.io/quarkus/centos-quarkus-maven:graalvm-1.0.0-rc16
+    image: quay.io/quarkus/centos-quarkus-maven:19.2.0.1
     memoryLimit: 2Gi
     args: ['sleep', 'infinity']
     mountSources: true
@@ -22,19 +23,29 @@ components:
     env:
       - name: HOME
         value: /project
-  - alias: quarkus-runner
+  - alias: quarkus-backend
     type: dockerimage
-    image: registry.fedoraproject.org/fedora-minimal:29
+    image: quay.io/quarkus/ubi-quarkus-native-image
     memoryLimit: 16M
     mountSources: true
     command: ['tail']
     args: ['-f', '/dev/null']
 
+  - alias: node-frontend
+    type: dockerimage
+    image: docker.io/centos/nodejs-8-centos7:latest
+    memoryLimit: 64Mi
+    mountSources: false
+    args: ['tail', '-f', '/dev/null']
+    endpoints:
+      - name: '3000/tcp'
+        port: 3000
+
   - alias: git
     type: dockerimage
     image: sunix/git-devtools
     mountSources: true
-    memoryLimit: 256M
+    memoryLimit: 64M
     args: ['sleep', 'infinity']
 
   - alias: java
@@ -52,27 +63,56 @@ commands:
     actions:
       - type: exec
         command: pkill java; mvn compile quarkus:dev
-        component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/hello-quarkus
+        component: quarkus-backend-builder
+        workdir: /projects/che-quarkus-demo/quarkus-backend
 
   - name: package
     actions:
       - type: exec
         command: mvn package
-        component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/hello-quarkus
+        component: quarkus-backend-builder
+        workdir: /projects/che-quarkus-demo/quarkus-backend
 
   - name: package -Pnative
     actions:
       - type: exec
         command: mvn package -Pnative
-        component: quarkus-builder
-        workdir: /projects/che-quarkus-demo/hello-quarkus
+        component: quarkus-backend-builder
+        workdir: /projects/che-quarkus-demo/quarkus-backend
 
-  - name: start native
+  - name: start quarkus-backend native
     actions:
       - type: exec
         command: ./hello-quarkus-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
-        component: quarkus-runner
-        workdir: /projects/che-quarkus-demo/hello-quarkus/target
+        component: quarkus-backend
+        workdir: /projects/che-quarkus-demo/quarkus-backend/target
 
+  - name: start node-frontend
+    actions:
+      - type: exec
+        command: serve -l 3000 -s "/app"
+        component: node-frontend
+        workdir: /
+
+  - name: stop node-frontend
+    actions:
+      - type: exec
+        command: pkill node
+        component: frontend
+        workdir: /
+
+  - name: connect java debugger quarkus-backend
+    actions:
+      - type: vscode-launch
+        referenceContent: |
+          {
+          "version": "0.2.0",
+          "configurations": [
+            {
+              "type": "java",
+              "name": "Debug (Attach) - Remote",
+              "request": "attach",
+              "hostName": "localhost",
+              "port": 5005
+            }]
+          }
