@@ -15,7 +15,7 @@ components:
     type: dockerimage
     image: quay.io/quarkus/centos-quarkus-maven:19.2.0.1
     memoryLimit: 2Gi
-    cmd: ['sleep']
+    command: ['sleep']
     args: ['infinity']
     mountSources: true
     volumes:
