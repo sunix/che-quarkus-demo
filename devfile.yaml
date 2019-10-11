@@ -98,7 +98,7 @@ commands:
     actions:
       - type: exec
         command: pkill node
-        component: frontend
+        component: node-frontend
         workdir: /
 
   - name: connect java debugger quarkus-backend
