@@ -64,7 +64,7 @@ components:
     type: chePlugin
     alias: vscode-openshift
 
-  - id: ms-kubernetes-tools/vscode-kubernetes-tools/latest
+  - id: ms-kubernetes-tools/vscode-kubernetes-tools/0.1.17
     type: chePlugin
 
   - id: redhat/vscode-yaml/latest
