@@ -5,10 +5,6 @@ import PostList from './components/PostList'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 
-if (window._env_.REACT_APP_BACKEND_HOST.endsWith('/')) {
-  window._env_.REACT_APP_BACKEND_HOST = window._env_.REACT_APP_BACKEND_HOST.slice(0, -1);
-}
-
 function App() {
   return (
     <Container>
