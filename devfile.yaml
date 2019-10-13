@@ -27,6 +27,7 @@ components:
     endpoints:
       - name: 'quarkus/dev'
         port: 8080
+
   - alias: quarkus-backend
     type: dockerimage
     image: quay.io/quarkus/ubi-quarkus-native-image:19.2.0.1
@@ -46,7 +47,6 @@ components:
     endpoints:
       - name: '3000/tcp'
         port: 3000
-
 
   - alias: git
     type: dockerimage
@@ -119,15 +119,37 @@ commands:
     actions:
       - type: exec
         command: |-
-                 oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:19.2.0.1~https://github.com/sunix/che-quarkus-demo.git#microservices --name=quarkus-backend --context-dir=quarkus-backend
-                 oc expose svc/quarkus-backend
-                 export BK=http://$(oc get route quarkus-backend --template=''{{ .spec.host }}'')
-                 oc new-app nodejs~https://github.com/sunix/che-quarkus-demo.git --context-dir=node-frontend --name=node-frontend -e REACT_APP_BACKEND_HOST=$BK
+                  oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:19.2.0.1~https://github.com/sunix/che-quarkus-demo.git#microservices --name=quarkus-backend --context-dir=quarkus-backend
+                  oc expose svc/quarkus-backend
+                  oc logs -f bc/quarkus-backend
+                  export BK=http://$(oc get route quarkus-backend --template='{{ .spec.host }}')
+                  echo $BK
+                  oc new-app nodejs~https://github.com/sunix/che-quarkus-demo.git#microservices --context-dir=node-frontend --name=node-frontend -e PORT=8080 -e REACT_APP_BACKEND_HOST=$BK
+                  oc expose svc/node-frontend
+                  oc logs -f bc/node-frontend
+                  echo node-frontend url http://$(oc get route node-frontend --template='{{ .spec.host }}')
+        component: oc
+        workdir: /projects/che-quarkus-demo/node-frontend/
+
+  - name: oc rebuild quarkus-backend from local source
+    actions:
+      - type: exec
+        command: |-
+                  oc start-build quarkus-backend --from-dir=.
+                  oc logs -f bc/quarkus-backend
+
         component: oc
         workdir: /projects/che-quarkus-demo/node-frontend/
 
 
-
+  - name: get oc4
+    actions:
+      - type: exec
+        command: |-
+                  wget https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz
+                  tar -zxvf oc.tar.gz
+        component: oc
+        workdir: /projects/
 
   - name: connect java debugger quarkus-backend
     actions:
