@@ -11,7 +11,7 @@ projects:
 
 components:
 
-  - alias: quarkus-backend-builder
+  - alias: quarkus-backend-dev
     type: dockerimage
     image: quay.io/quarkus/centos-quarkus-maven:19.2.0.1
     memoryLimit: 2Gi
@@ -27,8 +27,6 @@ components:
     endpoints:
       - name: 'quarkus/dev'
         port: 8080
-      - name: 'quarkus/dev-debug'
-        port: 5005
   - alias: quarkus-backend
     type: dockerimage
     image: quay.io/quarkus/ubi-quarkus-native-image:19.2.0.1
@@ -40,15 +38,15 @@ components:
       - name: '8080/tcp'
         port: 8080
 
-  - alias: node-frontend
-    type: dockerimage
-    image: docker.io/centos/nodejs-8-centos7:latest
-    memoryLimit: 64Mi
+  - alias: node-frontend-dev
     mountSources: true
-    args: ['tail', '-f', '/dev/null']
+    image: 'quay.io/eclipse/che-nodejs8-centos:7.2.0'
+    memoryLimit: 512Mi
+    type: dockerimage
     endpoints:
       - name: '3000/tcp'
         port: 3000
+
 
   - alias: git
     type: dockerimage
@@ -62,8 +60,14 @@ components:
     id: redhat/java/latest
     memoryLimit: 1536M
 
-  - alias: yaml
-    id: redhat/vscode-yaml/latest
+  - id: redhat/vscode-openshift-connector/0.0.21
+    type: chePlugin
+    alias: oc
+
+  - id: ms-kubernetes-tools/vscode-kubernetes-tools/latest
+    type: chePlugin
+
+  - id: redhat/vscode-yaml/latest
     type: chePlugin
 
 commands:
@@ -72,21 +76,21 @@ commands:
     actions:
       - type: exec
         command: pkill java; mvn compile quarkus:dev
-        component: quarkus-backend-builder
+        component: quarkus-backend-dev
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
   - name: package
     actions:
       - type: exec
         command: pkill java; mvn package
-        component: quarkus-backend-builder
+        component: quarkus-backend-dev
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
   - name: package -Pnative
     actions:
       - type: exec
         command: pkill java; mvn package -Pnative
-        component: quarkus-backend-builder
+        component: quarkus-backend-dev
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
   - name: start quarkus-backend native
@@ -96,19 +100,34 @@ commands:
         component: quarkus-backend
         workdir: /projects/che-quarkus-demo/quarkus-backend/target
 
-  - name: start node-frontend
+  - name: start dev node-frontend
     actions:
       - type: exec
-        command: serve -l 3000 -s "/app"
-        component: node-frontend
-        workdir: /
+        command: npm run start
+        component: node-frontend-dev
+        workdir: /projects/che-quarkus-demo/node-frontend/
 
-  - name: stop node-frontend
+  - name: compile node-frontend
     actions:
       - type: exec
-        command: pkill node
-        component: node-frontend
-        workdir: /
+        command: npm install
+        component: node-frontend-dev
+        workdir: /projects/che-quarkus-demo/node-frontend/
+
+
+  - name: oc new app quarkus + frontend
+    actions:
+      - type: exec
+        command: |-
+                 oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:19.2.0.1~https://github.com/sunix/che-quarkus-demo.git#microservices --name=quarkus-backend --context-dir=quarkus-backend
+                 oc expose svc/quarkus-backend
+                 export BK=http://$(oc get route quarkus-backend --template=''{{ .spec.host }}'')
+                 oc new-app nodejs~https://github.com/sunix/che-quarkus-demo.git --context-dir=node-frontend --name=node-frontend -e REACT_APP_BACKEND_HOST=$BK
+        component: oc
+        workdir: /projects/che-quarkus-demo/node-frontend/
+
+
+
 
   - name: connect java debugger quarkus-backend
     actions:
