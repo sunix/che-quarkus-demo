@@ -1,4 +1,4 @@
-FROM docker.io/eclipse/che-remote-plugin-kubernetes-tooling-1.0.0:next
+FROM docker.io/eclipse/che-remote-plugin-kubernetes-tooling-1.0.0:7.2.0
 
 
 ENV ODO_VERSION=v0.0.20 \
