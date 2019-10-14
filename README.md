@@ -1,5 +1,18 @@
 # Quarkus and Che
 
+To run this demo:
+
+[![Contribute](https://che.openshift.io/factory/resources/factory-contribute.svg)](http://che-che.apps.cluster-paris-67df.paris-67df.open.redhat.com/f?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml)
+
+or
+
+```
+https://<your-che-instance>/f?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml
+```
+
+
+
+
 ## Introduction
 The goal of this demo is to provide a developer environment to get started in coding with Quarkus.
 
