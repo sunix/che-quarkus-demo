@@ -60,15 +60,9 @@ components:
     id: redhat/java/latest
     memoryLimit: 1536M
 
-  - reference: https://raw.githubusercontent.com/sunix/che-quarkus-demo/c69effca01bfbb904f9ecf07c580ea7e84424d48/plugins/vscode-openshift/meta.yaml
+  - reference: https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/plugins/vscode-openshift/meta.yaml
     type: chePlugin
     alias: vscode-openshift
-
-  - id: ms-kubernetes-tools/vscode-kubernetes-tools/0.1.17
-    type: chePlugin
-
-  - id: redhat/vscode-yaml/latest
-    type: chePlugin
 
 commands:
 
