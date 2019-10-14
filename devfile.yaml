@@ -153,7 +153,7 @@ commands:
                   oc start-build quarkus-backend --from-dir=.
                   oc logs -f bc/quarkus-backend
         component: vscode-openshift
-        workdir: /projects/che-quarkus-demo/node-frontend/
+        workdir: /projects/che-quarkus-demo/
 
 
   - name: oc rebuild node-frontend from local source
@@ -164,7 +164,7 @@ commands:
                   oc logs -f bc/node-frontend
 
         component: vscode-openshift
-        workdir: /projects/che-quarkus-demo/node-frontend/
+        workdir: /projects/che-quarkus-demo/
 
 
 
