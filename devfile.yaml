@@ -191,5 +191,12 @@ commands:
         component: vscode-openshift
         workdir: /projects/che-quarkus-demo/
 
+  - name: oc get route node-frontend
+    actions:
+      - type: exec
+        command: |-
+                  echo node-frontend url http://$(oc get route node-frontend --template='{{ .spec.host }}')
+        component: vscode-openshift
+        workdir: /projects/che-quarkus-demo/node-frontend/
 
 
