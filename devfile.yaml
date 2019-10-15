@@ -96,7 +96,7 @@ commands:
   - name: start quarkus-backend native
     actions:
       - type: exec
-        command: ./quarkus-demo-1.0.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
+        command: ./quarkus-backend-1.0.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
         component: quarkus-backend
         workdir: /projects/che-quarkus-demo/quarkus-backend/target
 
