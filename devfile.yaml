@@ -64,11 +64,9 @@ components:
     id: redhat/java/latest
     memoryLimit: 1536M
 
-  - alias: vscode-openshift
+  - id: redhat/vscode-openshift-connector/latest
     type: chePlugin
-    reference: https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/plugins/vscode-openshift/meta.yaml
-
-
+    alias: vscode-openshift
 
 commands:
 
