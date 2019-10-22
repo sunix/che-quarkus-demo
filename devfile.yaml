@@ -23,10 +23,10 @@ components:
     mountSources: true
     volumes:
       - name: mavenrepo
-        containerPath: /project/.m2
+        containerPath: /.m2
     env:
-      - name: HOME
-        value: /project
+      - name: M2_REPO
+        value: /.m2/
     endpoints:
       - name: 'quarkus/dev'
         port: 8080
