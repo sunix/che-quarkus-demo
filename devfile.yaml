@@ -197,4 +197,11 @@ commands:
         component: vscode-openshift
         workdir: /projects/che-quarkus-demo/node-frontend/
 
-
+  - name: get oc4
+    actions:
+      - type: exec
+        command: |-
+                  wget https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz
+                  tar -zxvf oc.tar.gz
+        component: oc
+        workdir: /projects/
