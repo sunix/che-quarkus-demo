@@ -203,5 +203,5 @@ commands:
         command: |-
                   wget https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz
                   tar -zxvf oc.tar.gz
-        component: oc
+        component: vscode-openshift
         workdir: /projects/
