@@ -68,6 +68,29 @@ components:
     type: chePlugin
     alias: vscode-openshift
 
+  - type: dockerimage
+    alias: mongo
+    image: centos/mongodb-34-centos7
+    memoryLimit: 512Mi
+    env:
+     - name: MONGODB_USER
+       value: user
+     - name: MONGODB_PASSWORD
+       value: password
+     - name: MONGODB_DATABASE
+       value: guestbook
+     - name: MONGODB_ADMIN_PASSWORD
+       value: password
+    volumes:
+     - name: mongo-storage
+       containerPath: /var/lib/mongodb/data
+    endpoints:
+     - name: mongodb-34-centos7
+       port: 27017
+       attributes:
+         discoverable: 'true'
+         public: 'false'
+
 commands:
 
   - name: compile quarkus:dev
