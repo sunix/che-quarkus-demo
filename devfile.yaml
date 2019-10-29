@@ -31,7 +31,7 @@ components:
       - name: 'quarkus/dev'
         port: 8080
 
-  - alias: quarkus-backend
+  - alias: quarkus-backend-native-prod
     type: dockerimage
     image: quay.io/quarkus/ubi-quarkus-native-image:19.2.0.1
     memoryLimit: 32M
@@ -95,7 +95,7 @@ commands:
     actions:
       - type: exec
         command: ./quarkus-backend-1.0.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
-        component: quarkus-backend
+        component: quarkus-backend-native-prod
         workdir: /projects/che-quarkus-demo/quarkus-backend/target
 
   - name: connect java debugger quarkus-backend
