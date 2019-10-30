@@ -11,13 +11,8 @@ projects:
     name: che-quarkus-demo
   - source:
       type: zip
-      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191030-repo/m2repo.zip'
+      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191030-repo/local.zip'
     name: local
-  - source:
-      type: zip
-      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191030-repo/node_modules.zip'
-    name: local_node_modules
-    clonePath: che-quarkus-demo/node-frontend
 
 
 components:
@@ -55,10 +50,6 @@ components:
     endpoints:
       - name: '3000/tcp'
         port: 3000
-    env:
-      - name: NPM_CONFIG_PREFIX
-        value: '/projects/local/node_modules'
-
 
   - alias: git
     type: dockerimage
@@ -148,14 +139,14 @@ commands:
   - name: compile node-frontend
     actions:
       - type: exec
-        command: npm install
+        command: mv /projects/local/node_modules . ; npm install
         component: node-frontend-dev
         workdir: /projects/che-quarkus-demo/node-frontend/
 
   - name: start DEVMODE node-frontend
     actions:
       - type: exec
-        command: npm run start
+        command: mv /projects/local/node_modules . ; npm run start
         component: node-frontend-dev
         workdir: /projects/che-quarkus-demo/node-frontend/
 
