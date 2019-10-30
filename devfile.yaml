@@ -12,7 +12,7 @@ projects:
   - source:
       type: zip
       location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191030m2/repository.zip'
-    name: .m2
+    name: m2
 
 
 
@@ -27,7 +27,7 @@ components:
     mountSources: true
     env:
       - name: M2_REPO
-        value: /projects/.m2/
+        value: /projects/m2/
     endpoints:
       - name: 'quarkus/dev'
         port: 8080
@@ -64,6 +64,9 @@ components:
     type: chePlugin
     id: redhat/java/latest
     memoryLimit: 1536M
+    env:
+      - name: M2_REPO
+        value: /projects/m2/
 
   - id: redhat/vscode-openshift-connector/latest
     type: chePlugin
