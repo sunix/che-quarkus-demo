@@ -91,6 +91,9 @@ components:
          discoverable: 'true'
          public: 'false'
 
+  - id: eclipse/che-theia/next
+    type: cheEditor
+
 commands:
 
   - name: compile quarkus:dev
