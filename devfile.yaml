@@ -9,6 +9,10 @@ projects:
       location: 'https://github.com/sunix/che-quarkus-demo'
       branch: microservices
     name: che-quarkus-demo
+  - source:
+      type: zip
+      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191030m2/repository.zip'
+    name: .m2
 
 
 
@@ -21,12 +25,9 @@ components:
     command: ['sleep']
     args: ['infinity']
     mountSources: true
-    volumes:
-      - name: mavenrepo
-        containerPath: /.m2
     env:
       - name: M2_REPO
-        value: /.m2/
+        value: /projects/.m2/
     endpoints:
       - name: 'quarkus/dev'
         port: 8080
