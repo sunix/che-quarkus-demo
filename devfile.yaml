@@ -11,9 +11,13 @@ projects:
     name: che-quarkus-demo
   - source:
       type: zip
-      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/localrepo/local.zip'
+      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191030-repo/m2repo.zip'
     name: local
-
+  - source:
+      type: zip
+      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191030-repo/node_modules.zip'
+    name: local_node_modules
+    clonePath: che-quarkus-demo/node-frontend
 
 
 components:
@@ -101,28 +105,22 @@ components:
 
 commands:
 
-  - name: compile quarkus:dev
+  - name: start DEVMODE quarkus-backend
     actions:
       - type: exec
         command: pkill java; mvn compile quarkus:dev
         component: quarkus-backend-dev
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
-  - name: package
+
+  - name: build PROD quarkus-backend native app
     actions:
       - type: exec
-        command: pkill java; mvn package
+        command: pkill java; mvn package -Dmaven.test.skip=true -Pnative
         component: quarkus-backend-dev
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
-  - name: package -Pnative
-    actions:
-      - type: exec
-        command: pkill java; mvn package -Pnative
-        component: quarkus-backend-dev
-        workdir: /projects/che-quarkus-demo/quarkus-backend
-
-  - name: start quarkus-backend native
+  - name: start PROD quarkus-backend native app
     actions:
       - type: exec
         command: ./quarkus-backend-1.0.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
@@ -154,7 +152,7 @@ commands:
         component: node-frontend-dev
         workdir: /projects/che-quarkus-demo/node-frontend/
 
-  - name: start dev node-frontend
+  - name: start DEVMODE node-frontend
     actions:
       - type: exec
         command: npm run start
