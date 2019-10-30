@@ -64,9 +64,6 @@ components:
     type: chePlugin
     id: redhat/java/latest
     memoryLimit: 1536M
-    env:
-      - name: M2_REPO
-        value: /projects/m2/
 
   - id: redhat/vscode-openshift-connector/latest
     type: chePlugin
