@@ -9,6 +9,10 @@ projects:
       location: 'https://github.com/sunix/che-quarkus-demo'
       branch: microservices
     name: che-quarkus-demo
+  - source:
+      type: zip
+      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/localrepo/local.zip'
+    name: local
 
 
 
@@ -21,12 +25,9 @@ components:
     command: ['sleep']
     args: ['infinity']
     mountSources: true
-    volumes:
-      - name: mavenrepo
-        containerPath: /.m2
     env:
-      - name: M2_REPO
-        value: /.m2/
+      - name: MAVEN_OPTS
+        value: '-Dmaven.repo.local=/projects/local/m2repo'
     endpoints:
       - name: 'quarkus/dev'
         port: 8080
@@ -50,6 +51,10 @@ components:
     endpoints:
       - name: '3000/tcp'
         port: 3000
+    env:
+      - name: NPM_CONFIG_PREFIX
+        value: '/projects/local/node_modules'
+
 
   - alias: git
     type: dockerimage
@@ -90,6 +95,9 @@ components:
        attributes:
          discoverable: 'true'
          public: 'false'
+
+  - id: eclipse/che-theia/next
+    type: cheEditor
 
 commands:
 
