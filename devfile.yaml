@@ -11,7 +11,7 @@ projects:
     name: che-quarkus-demo
   - source:
       type: zip
-      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191030-repo/local.zip'
+      location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191031-repo/local.zip'
     name: local
 
 
@@ -20,7 +20,7 @@ components:
   - alias: quarkus-backend-dev
     type: dockerimage
     image: quay.io/quarkus/centos-quarkus-maven:19.2.0.1
-    memoryLimit: 2Gi
+    memoryLimit: 2.5G
     command: ['sleep']
     args: ['infinity']
     mountSources: true
