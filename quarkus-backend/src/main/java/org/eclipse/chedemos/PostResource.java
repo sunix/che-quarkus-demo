@@ -25,25 +25,24 @@ import org.jboss.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 public class PostResource {
   private static final Logger LOG = Logger.getLogger(PostResource.class);
-  private Set<Post> posts = Collections.newSetFromMap(Collections.synchronizedMap(new LinkedHashMap<>()));
 
   public PostResource() {
-    posts.add(new Post("Hello ParisJUG 2019", "Welcome to the Che7 demo."));
   }
-  
+
   @GET
   public Response list() {
-    return Response.ok(posts).build();
+    return Response.ok(Post.listAll()).build();
   }
 
   @POST
   public Response add(Post post) {
-    posts.add(post);
-    return Response.ok(posts).build();
+    post.persist();
+    return Response.ok(Post.listAll()).build();
   }
 
   @DELETE
   public Response delete(Post post) {
+    post.delete();;
     return Response.ok().build();
   }
 }

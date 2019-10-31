@@ -78,7 +78,7 @@ components:
      - name: MONGODB_PASSWORD
        value: password
      - name: MONGODB_DATABASE
-       value: guestbook
+       value: quarkus
      - name: MONGODB_ADMIN_PASSWORD
        value: password
     volumes:
