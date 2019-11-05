@@ -2,7 +2,7 @@
 
 To run this demo:
 
-[![Contribute](https://che.openshift.io/factory/resources/factory-contribute.svg)](https://che-che.apps.cluster-ludwigsb-0f54.ludwigsb-0f54.example.opentlc.com/f?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml)
+[![Contribute](https://che.openshift.io/factory/resources/factory-contribute.svg)](https://che-che.apps.cluster-paris-f0fc.paris-f0fc.example.opentlc.com/f?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml)
 
 or
 
