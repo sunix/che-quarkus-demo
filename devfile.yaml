@@ -161,7 +161,7 @@ commands:
                   # s2i quarkus app from source
                   oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:19.2.0.1~https://github.com/sunix/che-quarkus-demo.git#microservices --name=quarkus-backend --context-dir=quarkus-backend -e QUARKUS_MONGODB_CONNECTION_STRING=mongodb://admin:password@mongo
                   oc cancel-build bc/quarkus-backend
-                  oc patch bc/quarkus-backend -p '{"spec":{"resources":{"limits":{"cpu":"6", "memory":"5Gi"}}}}'
+                  oc patch bc/quarkus-backend -p '{"spec":{"resources":{"limits":{"cpu":"6", "memory":"6Gi"}}}}'
                   oc start-build quarkus-backend
                   oc expose svc/quarkus-backend
                   oc logs -f bc/quarkus-backend
