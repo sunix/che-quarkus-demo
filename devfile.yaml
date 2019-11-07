@@ -9,6 +9,7 @@ projects:
       location: 'https://github.com/sunix/che-quarkus-demo'
       branch: microservices
     name: che-quarkus-demo
+
   - source:
       type: zip
       location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191031-repo/local.zip'
@@ -31,6 +32,15 @@ components:
       - name: 'quarkus/dev'
         port: 8080
 
+  - alias: node-frontend-dev
+    mountSources: true
+    image: 'quay.io/eclipse/che-nodejs8-centos:7.2.0'
+    memoryLimit: 512Mi
+    type: dockerimage
+    endpoints:
+      - name: '3000/tcp'
+        port: 3000
+
   - alias: quarkus-backend-native-prod
     type: dockerimage
     image: quay.io/quarkus/ubi-quarkus-native-image:19.2.0.1
@@ -42,34 +52,8 @@ components:
       - name: '8080/tcp'
         port: 8080
 
-  - alias: node-frontend-dev
-    mountSources: true
-    image: 'quay.io/eclipse/che-nodejs8-centos:7.2.0'
-    memoryLimit: 512Mi
+  - alias: mongo
     type: dockerimage
-    endpoints:
-      - name: '3000/tcp'
-        port: 3000
-
-  - alias: git
-    type: dockerimage
-    image: sunix/git-devtools
-    mountSources: true
-    memoryLimit: 64M
-    args: ['sleep', 'infinity']
-
-
-  - alias: java
-    type: chePlugin
-    id: redhat/java/latest
-    memoryLimit: 1536M
-
-  - id: redhat/vscode-openshift-connector/latest
-    type: chePlugin
-    alias: vscode-openshift
-
-  - type: dockerimage
-    alias: mongo
     image: centos/mongodb-34-centos7
     memoryLimit: 512Mi
     env:
@@ -91,6 +75,25 @@ components:
          discoverable: 'true'
          public: 'false'
 
+
+  - alias: java
+    type: chePlugin
+    id: redhat/java/latest
+    memoryLimit: 1536M
+
+  - id: redhat/vscode-openshift-connector/latest
+    type: chePlugin
+    alias: vscode-openshift
+
+
+
+  - alias: git
+    type: dockerimage
+    image: sunix/git-devtools
+    mountSources: true
+    memoryLimit: 64M
+    args: ['sleep', 'infinity']
+
   - id: eclipse/che-theia/next
     type: cheEditor
 
@@ -104,14 +107,14 @@ commands:
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
 
-  - name: build PROD quarkus-backend native app
+  - name: build NATIVE quarkus-backend
     actions:
       - type: exec
         command: pkill java; mvn package -Dmaven.test.skip=true -Pnative
         component: quarkus-backend-dev
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
-  - name: start PROD quarkus-backend native app
+  - name: start NATIVE quarkus-backend
     actions:
       - type: exec
         command: ./quarkus-backend-1.0.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
@@ -135,8 +138,7 @@ commands:
           }
 
 
-
-  - name: compile node-frontend
+  - name: build node-frontend
     actions:
       - type: exec
         command: tar zxvf /projects/local/node_modules.tar.gz ; rm /projects/local/node_modules.tar.gz  ; npm install
@@ -149,6 +151,7 @@ commands:
         command: tar zxvf /projects/local/node_modules.tar.gz ; rm /projects/local/node_modules.tar.gz ; npm run start
         component: node-frontend-dev
         workdir: /projects/che-quarkus-demo/node-frontend/
+
 
 
 
