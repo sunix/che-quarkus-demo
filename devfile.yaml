@@ -68,13 +68,6 @@ components:
     volumes:
      - name: mongo-storage
        containerPath: /var/lib/mongodb/data
-    endpoints:
-     - name: mongodb-34-centos7
-       port: 27017
-       attributes:
-         discoverable: 'true'
-         public: 'false'
-
 
   - alias: java
     type: chePlugin
