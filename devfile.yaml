@@ -99,11 +99,17 @@ commands:
         component: quarkus-backend-dev
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
+  - name: build JVM quarkus-backend
+    actions:
+      - type: exec
+        command: pkill java; mvn package
+        component: quarkus-backend-dev
+        workdir: /projects/che-quarkus-demo/quarkus-backend
 
   - name: build NATIVE quarkus-backend
     actions:
       - type: exec
-        command: pkill java; mvn package -Dmaven.test.skip=true -Pnative
+        command: pkill java; mvn package -Pnative
         component: quarkus-backend-dev
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
@@ -177,7 +183,7 @@ commands:
                   # mongodb
                   oc new-app -e MONGODB_USER=user -e MONGODB_PASSWORD=password -e MONGODB_DATABASE=quarkus -e MONGODB_ADMIN_PASSWORD=password centos/mongodb-34-centos7 --name=mongo
                   # s2i quarkus app from source
-                  oc new-app registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift~https://github.com/sunix/che-quarkus-demo.git#microservices --name=quarkus-backend --context-dir=quarkus-backend -e QUARKUS_MONGODB_CONNECTION_STRING=mongodb://admin:password@mongo
+                  oc new-app fabric8/s2i-java~https://github.com/sunix/che-quarkus-demo.git#microservices --name=quarkus-backend --context-dir=quarkus-backend -e QUARKUS_MONGODB_CONNECTION_STRING=mongodb://admin:password@mongo --build-env=ARTIFACT_COPY_ARGS="-p -r lib/ *-runner.jar" --env=JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0"  --env=JAVA_APP_JAR="quarkus-backend-1.0.0-SNAPSHOT-runner.jar"
                   oc expose svc/quarkus-backend
                   oc logs -f bc/quarkus-backend
                   export REACT_APP_BACKEND_HOST=http://$(oc get route quarkus-backend --template='{{ .spec.host }}')
