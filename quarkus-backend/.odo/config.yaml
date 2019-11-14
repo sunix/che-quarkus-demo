@@ -1,0 +1,20 @@
+kind: LocalConfig
+apiversion: odo.openshift.io/v1alpha1
+ComponentSettings:
+  Type: s2i-java:latest
+  SourceLocation: ./
+  SourceType: local
+  Ports:
+  - 8080/TCP
+  - 8778/TCP
+  - 9779/TCP
+  Application: quarkus-app
+  Project: odo
+  Name: quarkus-comp
+  Envs:
+  - Name: ARTIFACT_COPY_ARGS
+    Value: -p -r lib/ *-runner.jar
+  - Name: JAVA_OPTIONS
+    Value: -Dquarkus.http.host=0.0.0.0
+  - Name: JAVA_APP_JAR
+    Value: quarkus-backend-1.0.0-SNAPSHOT-runner.jar
