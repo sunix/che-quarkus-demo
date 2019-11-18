@@ -243,17 +243,16 @@ commands:
 
 
 
-  - name: odo - setup-quarkus-backend
+  - name: odo - import s2i-java
     actions:
       - type: exec
         command: |-
                   oc import-image s2i-java fabric8/s2i-java --confirm
                   oc annotate istag/s2i-java:latest tags=builder
-                  odo config set --env=JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0"  --env=JAVA_APP_JAR="quarkus-backend-1.0.0-SNAPSHOT-runner.jar"
         component: vscode-openshift
         workdir: /projects/che-quarkus-demo/quarkus-backend
 
-  - name: odo - setup-quarkus-backend
+  - name: odo - config-quarkus-backend
     actions:
       - type: exec
         command: |-
