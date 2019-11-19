@@ -137,10 +137,10 @@ commands:
           }
 
 
-  - name: build node-frontend
+  - name: build PROD node-frontend
     actions:
       - type: exec
-        command: tar zxvf /projects/local/node_modules.tar.gz ; rm /projects/local/node_modules.tar.gz  ; npm install
+        command: tar zxvf /projects/local/node_modules.tar.gz ; rm /projects/local/node_modules.tar.gz  ; npm run build
         component: node-frontend-dev
         workdir: /projects/che-quarkus-demo/node-frontend/
 
@@ -151,7 +151,12 @@ commands:
         component: node-frontend-dev
         workdir: /projects/che-quarkus-demo/node-frontend/
 
-
+  - name: start PROD node-frontend
+    actions:
+      - type: exec
+        command: node index.js
+        component: node-frontend-dev
+        workdir: /projects/che-quarkus-demo/node-frontend/
 
 
   - name: oc - create quarkus-backend NATIVE + node-frontend
