@@ -28,6 +28,14 @@ components:
     env:
       - name: MAVEN_OPTS
         value: '-Dmaven.repo.local=/projects/local/m2repo'
+      - name: username
+        value: user
+      - name: password
+        value: password
+      - name: admin_password
+        value: password
+      - name: uri
+        value: mongodb://localhost
     endpoints:
       - name: 'quarkus/dev'
         port: 8080
@@ -62,7 +70,7 @@ components:
      - name: MONGODB_PASSWORD
        value: password
      - name: MONGODB_DATABASE
-       value: quarkus
+       value: sampledb
      - name: MONGODB_ADMIN_PASSWORD
        value: password
     volumes:
