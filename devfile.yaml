@@ -87,9 +87,6 @@ components:
     memoryLimit: 64M
     args: ['sleep', 'infinity']
 
-  - id: eclipse/che-theia/next
-    type: cheEditor
-
 commands:
 
   - name: start DEVMODE quarkus-backend
