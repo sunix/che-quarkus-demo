@@ -14,10 +14,9 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "install": "npm run build"
+    "install": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"

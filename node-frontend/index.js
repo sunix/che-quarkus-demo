@@ -24,9 +24,9 @@ if( process.env.COMPONENT_QUARKUS_BACKEND_PORT){
 
 app.use('/quarkus', proxy(backend_quarkus_host + ':' + backend_quarkus_port));
 
-var port = '3000'
-if( process.env.NODE_FRONTEND_POSTS_APP_SERVICE_PORT) {
-  port = process.env.NODE_FRONTEND_POSTS_APP_SERVICE_PORT;
+var port = '8080'
+if( process.env.FRONTEND_PORT) {
+  port = process.env.FRONTEND_PORT;
 }
 
 app.listen(port)

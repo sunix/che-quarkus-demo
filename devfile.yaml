@@ -48,6 +48,9 @@ components:
     endpoints:
       - name: '3000/tcp'
         port: 3000
+    env:
+      - name: FRONTEND_PORT
+        value: 3000
 
   - alias: quarkus-backend-native-prod
     type: dockerimage
@@ -257,7 +260,7 @@ commands:
     actions:
       - type: exec
         command: |-
-                  oc import-image s2i-java fabric8/s2i-java --confirm
+                  oc import-image docker.io/fabric8/s2i-java --confirm
                   oc annotate istag/s2i-java:latest tags=builder
         component: vscode-openshift
         workdir: /projects/che-quarkus-demo/quarkus-backend
