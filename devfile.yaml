@@ -29,13 +29,13 @@ components:
       - name: MAVEN_OPTS
         value: '-Dmaven.repo.local=/projects/local/m2repo'
       - name: username
-        value: user
+        value: 'user'
       - name: password
-        value: password
+        value: 'password'
       - name: admin_password
-        value: password
+        value: 'password'
       - name: uri
-        value: mongodb://localhost
+        value: 'mongodb://localhost'
     endpoints:
       - name: 'quarkus/dev'
         port: 8080
@@ -50,7 +50,7 @@ components:
         port: 3000
     env:
       - name: FRONTEND_PORT
-        value: 3000
+        value: '3000'
 
   - alias: quarkus-backend-native-prod
     type: dockerimage
