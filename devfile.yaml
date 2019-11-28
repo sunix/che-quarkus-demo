@@ -196,7 +196,7 @@ commands:
                   # mongodb
                   oc new-app -e MONGODB_USER=user -e MONGODB_PASSWORD=password -e MONGODB_DATABASE=quarkus -e MONGODB_ADMIN_PASSWORD=password centos/mongodb-34-centos7 --name=mongo
                   # s2i quarkus app from source
-                  oc new-app fabric8/s2i-java~https://github.com/sunix/che-quarkus-demo.git#microservices --name=quarkus-backend --context-dir=quarkus-backend -e QUARKUS_MONGODB_CONNECTION_STRING=mongodb://admin:password@mongo --env=JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0"  --env=JAVA_APP_JAR="quarkus-backend-1.0.0-SNAPSHOT-runner.jar"
+                  oc new-app java~https://github.com/sunix/che-quarkus-demo.git#microservices --name=quarkus-backend --context-dir=quarkus-backend -e QUARKUS_MONGODB_CONNECTION_STRING=mongodb://admin:password@mongo --env=JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0"  --env=JAVA_APP_JAR="quarkus-backend-1.0.0-SNAPSHOT-runner.jar"
                   oc expose svc/quarkus-backend
                   oc logs -f bc/quarkus-backend
                   export REACT_APP_BACKEND_HOST=http://$(oc get route quarkus-backend --template='{{ .spec.host }}')
@@ -256,19 +256,13 @@ commands:
 
 
 
-  - name: odo - import s2i-java
-    actions:
-      - type: exec
-        command: |-
-                  oc import-image docker.io/fabric8/s2i-java --confirm
-                  oc annotate istag/s2i-java:latest tags=builder
-        component: vscode-openshift
-        workdir: /projects/che-quarkus-demo/quarkus-backend
 
-  - name: odo - config-quarkus-backend
+
+
+  - name: oc login
     actions:
       - type: exec
         command: |-
-                  odo config set --env=JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0"  --env=JAVA_APP_JAR="quarkus-backend-1.0.0-SNAPSHOT-runner.jar"
+                  rm oc; curl https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz -s | tar zxv && ./oc login --server=${KUBERNETES_SERVICE_HOST}:443
         component: vscode-openshift
-        workdir: /projects/che-quarkus-demo/quarkus-backend
+        workdir: /tmp
