@@ -43,7 +43,7 @@ components:
   - alias: node-frontend-dev
     mountSources: true
     image: 'quay.io/eclipse/che-nodejs8-centos:7.2.0'
-    memoryLimit: 512Mi
+    memoryLimit: 768Mi
     type: dockerimage
     endpoints:
       - name: '3000/tcp'
