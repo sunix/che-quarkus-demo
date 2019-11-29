@@ -99,6 +99,7 @@
             <configuration>
               <tasks>
                 <move file="${project.basedir}/target/${project.build.finalName}-runner.jar" tofile="${project.basedir}/target/${project.build.finalName}.jar" />
+                <delete file="${project.basedir}/target/quarkus-backend-dev.jar" />
               </tasks>
             </configuration>
             <goals>
