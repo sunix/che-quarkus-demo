@@ -2,7 +2,7 @@
 
 To run this demo:
 
-[![Contribute](factory-contribute.svg)](http://codeready-crw.apps.cluster-paris-8455.paris-8455.example.opentlc.com/f?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml)
+[![Contribute](factory-contribute.svg)](https://blog.sunix.org/cheeze?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml)
 
 or
 
