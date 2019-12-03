@@ -2,12 +2,12 @@
 
 To run this demo:
 
-[![Contribute](factory-contribute.svg)](https://blog.sunix.org/cheeze?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml)
+[![Contribute](factory-contribute.svg)](https://blog.sunix.org/factory?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml)
 
 or
 
 ```
-https://<your-codeready-workspaces-instance>/f?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml
+https://<your-codeready-workspaces-instance>/factory?url=https://raw.githubusercontent.com/sunix/che-quarkus-demo/microservices/devfile.yaml
 ```
 
 
