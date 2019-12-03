@@ -11,6 +11,11 @@ projects:
     name: che-quarkus-demo
 
   - source:
+      type: git
+      location: 'https://github.com/redhat-developer-demos/quarkus-reactjs-postit-app'
+    name: postit-app
+
+  - source:
       type: zip
       location: 'https://github.com/sunix/che-quarkus-demo/releases/download/20191113-repo/local.zip'
     name: local
