@@ -1,4 +1,4 @@
-#This demo is outdated.
+# This demo is outdated.
 Moved to https://github.com/redhat-developer-demos/quarkus-reactjs-postit-app
 
 
