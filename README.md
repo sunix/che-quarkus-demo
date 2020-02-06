@@ -1,3 +1,7 @@
+#This demo is outdated.
+Moved to https://github.com/redhat-developer-demos/quarkus-reactjs-postit-app
+
+
 # Quarkus and Che
 
 ## Introduction
